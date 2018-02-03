@@ -1,0 +1,17 @@
+digraph G {
+    compound=true;
+    ranksep=1.25;
+
+    node [shape=plaintext, fontsize=16, label=""];
+
+    bgcolor=white;
+    edge [arrowsize=1, color=black];
+    graph[penwidth=0, labelloc="b"];
+   
+    subgraph cluster_Dertouzos {Dertouzos_icon[image="Dertouzos.png"];};
+    subgraph cluster_Berners_Lee {Berners_Lee_icon[image="Berners_Lee.png"];};
+
+
+    Dertouzos_icon -> Berners_Lee_icon;
+
+}

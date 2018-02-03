@@ -1,0 +1,338 @@
+#include <iostream>
+using namespace std;
+
+template<typename T>
+class BinomNode
+{
+public:
+    T data;
+    int degree;
+    BinomNode<T>* parent;
+    BinomNode<T>* left_child;
+    BinomNode<T>* right_sibling;
+    BinomNode(T d):data(d),degree(0),parent(NULL),left_child(NULL),right_sibling(NULL) {};
+
+};
+
+template<typename T>
+class BinomialHeap{
+public:
+    BinomNode<T>* head;
+    BinomNode<T>* _min;
+
+    void sort_degree(BinomNode<T>*&,BinomNode<T>*);
+    void inner_insert(BinomNode<T>*);
+    bool findMin(BinomNode<T>** &);
+    void del_insert(BinomNode<T>*);
+    void find_node(BinomNode<T>*,bool&,T,BinomNode<T>* &);
+    void relocate(BinomNode<T>*);
+    void updateMin();
+    BinomNode<T>* union_heap(BinomNode<T>*,BinomNode<T>*);
+
+public:
+
+    BinomialHeap():head(NULL),_min(NULL){};
+    void _insert(T);
+    BinomNode<T>* minimum();
+    BinomNode<T>* get_head();
+    BinomNode<T>* extract_min();
+    bool decrease_key(T,T);
+    bool delete_key(T);
+    bool buscar(T);
+    void print_head_list();
+};
+
+template<typename T>
+void BinomialHeap<T>::sort_degree(BinomNode<T>* &p,BinomNode<T>*q)
+{
+    if(!p){p=q;}
+    else if(p->degree>q->degree)
+    {
+        q->right_sibling=p, p=q;
+    }
+    else if(p->degree==q->degree)
+    {
+        BinomNode<T>* tmp=p;
+        p=p->right_sibling;
+        tmp=union_heap(tmp,q);
+        inner_insert(tmp);
+    }
+    else{
+        sort_degree(p->right_sibling,q);
+    }
+}
+
+template<typename T>
+BinomNode<T>* BinomialHeap<T>::union_heap(BinomNode<T>* p,BinomNode<T>* q)
+{
+        //p=tmp q=_new
+        BinomNode<T>* tmp_left;
+        if(p->data<q->data){
+                tmp_left=p->left_child;
+                p->left_child=q;
+                q->right_sibling=tmp_left;
+                q->parent=p;
+                ++(p->degree);
+                p->right_sibling=NULL;
+                return p;
+        }
+        else{
+                tmp_left=q->left_child;
+                q->left_child=p;
+                p->right_sibling=tmp_left;
+                p->parent=q;
+                ++(q->degree);
+                q->right_sibling=NULL;
+                return q;
+        }
+}
+
+
+template<typename T>
+void BinomialHeap<T>::inner_insert(BinomNode<T>* _new)
+{
+    if(_new)
+    {
+        if(!head){
+            head=_new;
+            _min=head;
+        }
+
+        else if(head->degree==_new->degree){
+            BinomNode<T>* tmp=head;
+            head=head->right_sibling;
+            tmp=union_heap(tmp,_new);
+            inner_insert(tmp);
+        }
+        else if(_new->degree>head->degree){
+            sort_degree(head,_new);
+        }
+        else{
+            _new->right_sibling=head;
+            head=_new;
+            if(_new->data<_min->data){
+                _min=_new;
+            }
+        }
+    }
+}
+
+template<typename T>
+void BinomialHeap<T>::_insert(T d)
+{
+    BinomNode<T>* tmp=new BinomNode<T>(d);
+    inner_insert(tmp);
+}
+
+template<typename T>
+BinomNode<T>* BinomialHeap<T>::minimum()
+{
+    updateMin();
+    return _min;
+}
+
+template<typename T>
+BinomNode<T>* BinomialHeap<T>::get_head()
+{
+    return head;
+}
+
+template<typename T>
+void BinomialHeap<T>::del_insert(BinomNode<T>* p)
+{
+    if(p)
+    {
+        BinomNode<T>* next=p->right_sibling;
+        p->parent=NULL;
+        p->right_sibling=NULL;
+        if(next)
+        {
+            del_insert(next);
+        }
+
+        inner_insert(p);
+    }
+}
+
+template<typename T>
+bool BinomialHeap<T>::findMin(BinomNode<T>** &m)
+{
+    if(_min)
+    {
+        m=&head;
+        while(*m){
+                if((*m)->data==_min->data){
+                    return true;
+                }
+                m=&((*m)->right_sibling);
+
+        }
+        return false;
+    }
+    return false;
+}
+
+template<typename T>
+BinomNode<T>* BinomialHeap<T>::extract_min()
+{
+    BinomNode<T>** p;
+    if(findMin(p)){
+            BinomNode<T>* minn,*children;
+            minn=*p;
+            *p=(*p)->right_sibling;
+            children=minn->left_child;
+            minn->left_child=NULL;
+            minn->right_sibling=NULL;
+
+            if(children)
+            {  del_insert(children);}
+            //else{   updateMin();}
+
+            return minn;
+
+    }
+    return NULL;
+}
+
+template<typename T>
+void BinomialHeap<T>::find_node(BinomNode<T>* p,bool& found,T d,BinomNode<T>* &node)
+{
+    if(!found && p)
+    {
+        if(d>=p->data)
+        {
+            if(p->data==d){found=true; node=p;}
+            else {find_node(p->left_child,found,d,node);}
+        }
+        find_node(p->right_sibling,found,d,node);
+    }
+
+}
+
+template<typename T>
+bool BinomialHeap<T>::buscar(T d)
+{
+    bool f=false;
+    BinomNode<T>* prueba;
+    find_node(head,f,d,prueba);
+    return f;
+}
+
+template<typename T>
+bool BinomialHeap<T>::decrease_key(T current,T _new)
+{
+    if(head)
+    {
+        bool f=false;
+        BinomNode<T>* p=NULL;
+        find_node(head,f,current,p);
+        if(p)
+        {
+            if(_new<current)
+            {
+                p->data=_new;
+                relocate(p);
+                return true;
+            }
+
+        }
+        return false;
+
+    }
+    return false;
+}
+
+template<typename T>
+bool BinomialHeap<T>::delete_key(T key)
+{
+    if(decrease_key(key,-10000))
+    {
+        extract_min();
+        return true;
+    }
+    return false;
+}
+
+template<typename T>
+void BinomialHeap<T>::updateMin()
+{
+    if(head)
+    {
+        BinomNode<T>* tmp;
+        _min=head;
+        tmp=head->right_sibling;
+        while(tmp)
+        {
+            if(_min->data>tmp->data)
+            {
+                _min=tmp;
+            }
+            tmp=tmp->right_sibling;
+        }
+    }
+    else{
+        _min=NULL;
+    }
+}
+
+template<typename T>
+void BinomialHeap<T>::print_head_list()
+{
+    if(head)
+    {
+        BinomNode<T>* tmp=head;
+        //cout<<tmp->data<<" "<<"Grado: "<<tmp->degree<<" | ";
+        while(tmp)
+        {
+            cout<<tmp->data<<" "<<"Grado: "<<tmp->degree<<" | ";
+            tmp=tmp->right_sibling;
+        }
+        cout<<endl;
+    }
+}
+
+template<typename T>
+void BinomialHeap<T>::relocate(BinomNode<T>* p)
+{
+    if(p)
+    {
+        BinomNode<T>* par=p->parent;
+        T tmp;
+        while(par && p->data<par->data)
+        {
+            tmp=p->data;
+            p->data=par->data;
+            par->data=tmp;
+
+            p=par;
+            par=par->parent;
+        }
+        if(_min->data>p->data){_min=p;}
+    }
+
+}
+
+
+int main()
+{
+    BinomialHeap<int> heap;
+
+    for(int i=10;i<=120;i+=10)
+    {
+        heap._insert(i);
+    }
+
+    BinomNode<int>* m;
+    heap.print_head_list();
+    m=heap.minimum();
+    cout<<"Now min: "<<m->data<<endl;
+
+    cout<<endl;
+    heap.decrease_key(100,0);	
+    //heap.extract_min();
+    heap.print_head_list();
+    m=heap.minimum();
+    cout<<"Later min: "<<m->data<<endl;
+
+    return 0;
+}

@@ -1,0 +1,160 @@
+\documentclass{article}
+\usepackage[pdftex,active,tightpage]{preview}
+\setlength\PreviewBorder{2mm}
+
+
+%\usepackage[margin=0.5in]{geometry}
+\usepackage[utf8]{inputenc}
+%\usepackage{textcomp}
+
+\usepackage{pgfplots}
+%\pgfplotsset{width=10cm,compat=1.9}
+%\usepgfplotslibrary{external}
+%\tikzexternalize
+
+
+\begin{document}
+
+%%//////////////////////////////////////////////
+
+\begin{preview}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Dijkstra},
+    legend pos=north west,
+    width=10cm, height=10cm, 
+    xlabel={Datos [N]},
+    ylabel={Tiempo [seg]},
+    xtick=data,
+    ymax=500,
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid style=dashed,
+    %%scaled ticks=true,
+    symbolic x coords={$10^2$,$10^3$,$10^4$,$10^5$,$10^6$},
+    %tick align=outside,
+    axis background/.style={fill=black!5},
+]
+
+\addplot[color=blue,mark=square,]
+    coordinates {($10^2$,0.0006493)($10^3$,0.0121101)($10^4$,1.13572)($10^5$,148.3)($10^6$,500)};
+    \legend{dijkstra}    
+\end{axis}
+\end{tikzpicture}
+
+\end{preview}
+%%//////////////////////////////////////////////
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+%%//////////////////////////////////////////////
+\begin{preview}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Dijkstra con binomial},
+     legend pos=north west,
+    width=10cm, height=10cm, 
+    xlabel={Datos [N]},
+    ylabel={Tiempo [seg]},
+    xtick=data,
+    ymax=500,
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid style=dashed,
+    %%scaled ticks=true,
+    symbolic x coords={$10^2$,$10^3$,$10^4$,$10^5$,$10^6$},
+    %tick align=outside,
+    axis background/.style={fill=black!5},
+]
+
+\addplot[color=red,mark=10-pointed star,]
+    coordinates {($10^2$,0.000524)($10^3$,0.00559698)($10^4$,0.0742304)($10^5$,1.02711)($10^6$,10.1185)};
+    \legend{dijkstra con binomial}
+\end{axis}
+\end{tikzpicture}
+
+\end{preview}
+%%//////////////////////////////////////////////
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+
+
+%%//////////////////////////////////////////////
+\begin{preview}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Dijkstra con fibonacci},
+     legend pos=north west,
+    width=10cm, height=10cm, 
+    xlabel={Datos [N]},
+    ylabel={Tiempo [seg]},
+    xtick=data,
+    ymax=500,
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid style=dashed,
+    %%scaled ticks=true,
+    symbolic x coords={$10^2$,$10^3$,$10^4$,$10^5$,$10^6$},
+    %tick align=outside,
+    axis background/.style={fill=black!5},
+]
+    
+\addplot[color=green,mark=o,]
+    coordinates {($10^2$,0.00048503)($10^3$,0.00291817)($10^4$,0.0517229)($10^5$,0.598059)($10^6$,7.18792)};
+    \legend{dijkstra con fibonacci} 
+\end{axis}
+\end{tikzpicture}
+
+\end{preview}
+%%//////////////////////////////////////////////
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+
+
+%%//////////////////////////////////////////////
+\begin{preview}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Comparacion},
+     legend pos=north west,
+    width=10cm, height=10cm, 
+    xlabel={Datos [N]},
+    ylabel={Tiempo [seg]},
+    xtick=data,
+    ymax=20,
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid style=dashed,
+    %%scaled ticks=true,
+    symbolic x coords={$10^2$,$10^3$,$10^4$,$10^5$,$10^6$},
+    %tick align=outside,
+    axis background/.style={fill=black!5},
+]
+
+\addplot[color=blue,mark=square,]
+    coordinates {($10^2$,0.0006493)($10^3$,0.0121101)($10^4$,1.13572)($10^5$,148.3)($10^6$,500)};
+  
+\addplot[color=red,mark=10-pointed star,]
+    coordinates {($10^2$,0.000524)($10^3$,0.00559698)($10^4$,0.0742304)($10^5$,1.02711)($10^6$,10.1185)};
+  
+\addplot[color=green,mark=o,]
+    coordinates {($10^2$,0.00048503)($10^3$,0.00291817)($10^4$,0.0517229)($10^5$,0.598059)($10^6$,7.18792)};
+    \legend{dijkstra,dijkstra con binomial,dijkstra con fibonacci,}
+\end{axis}
+\end{tikzpicture}
+
+
+\end{preview}
+%%//////////////////////////////////////////////
+
+
+
+
+\end{document}
